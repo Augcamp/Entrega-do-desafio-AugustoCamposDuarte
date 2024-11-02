@@ -46,7 +46,7 @@ function App() {
         try {
             await toggleStar(username); 
             setUsers(users.map(user => 
-                user.username === username ? { ...user, favorite: !user.favorite } : user
+                user.username === username ? { ...user, favorite: true } : { ...user, favorite: false }
             ));
         } catch (error) {
             console.error("Erro ao favoritar o usuário:", error);
