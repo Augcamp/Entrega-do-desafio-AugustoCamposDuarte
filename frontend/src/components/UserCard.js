@@ -15,11 +15,10 @@ function UserCard({ user, onDelete, onFavorite }) {
                 />
                 <h3>{user.name || user.username}</h3>
                 <p>{user.username}</p>
-                <a href={user.url} target="_blank" rel="noopener noreferrer">GitHub Profile</a>
         </div>
 
             <div className="buttons">
-                <a href={user.html_url} target="_blank" rel="noopener noreferrer">
+                <a href={user.url} target="_blank" rel="noopener noreferrer">
                     <img src={githubIcon} alt="GitHub" className="icons" />
                 </a>
                 <img 
