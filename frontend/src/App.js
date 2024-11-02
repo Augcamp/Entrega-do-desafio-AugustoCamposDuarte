@@ -63,6 +63,11 @@ function App() {
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               placeholder="GitHub username"
+              onKeyPress={(e) => { 
+                if (e.key === 'Enter') {
+                  handleAddUser();
+                }
+            }}
             />
             <button onClick={handleAddUser}>Adicionar</button>
           </div>
