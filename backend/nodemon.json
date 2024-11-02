@@ -1,0 +1,5 @@
+{
+    "watch": ["server.js", "api", "controller"],
+    "ext": "js,json",
+    "ignore": ["node_modules"]
+  }

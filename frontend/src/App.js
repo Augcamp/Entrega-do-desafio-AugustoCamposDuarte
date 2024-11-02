@@ -1,51 +1,79 @@
-import axios from 'axios'; 
-import React, { useState } from 'react'; 
-import { addUser } from './api'; 
+import React, { useState, useEffect } from 'react';
+import { addUser, getUsers, deleteUser, toggleStar } from './api'; 
 import UserList from './components/UserList';
 
- 
-const API = axios.create({ baseURL: 'http://localhost:3001/userController' }); 
 
+function App() {
+    const [username, setUsername] = useState('');
+    const [users, setUsers] = useState([]);
+    
+    useEffect(() => {
+        const fetchUsers = async () => {
+            try {
+                const response = await getUsers();
+                setUsers(response.data);
+            } catch (error) {
+                console.error("Erro ao carregar usuários:", error);
+            }
+        };
+        fetchUsers();
+    }, []);
 
-export const getUsers = () => API.get('/'); 
-export const deleteUser = (username) => API.delete(`/${username}`); 
-export const toggleStar = (username) => API.patch(`/${username}/toggle-star`);
+    const handleAddUser = async () => {
+        if (username) {
+            try {
+                const response = await addUser(username);
+                console.log("Usuário adicionado:", response.data);
+                setUsers([...users, response.data]);
+                setUsername('');
+            } catch (error) {
+                console.error("Erro ao adicionar usuário:", error);
+                alert(error.response?.data?.error || "Erro ao adicionar o usuário.");
+            }
+        }
+    };
 
- 
-function App() { 
-    const [username, setUsername] = useState(''); 
- 
-    const handleAddUser = async () => { 
-      if (username) { 
-          try { 
-              const response = await addUser(username); 
-              console.log("Resposta da API:", response);
-              if (response && response.data) { 
-                  console.log("Usuário adicionado:", response.data); 
-                  setUsername(''); 
-              } else { 
-                  console.error("Resposta inválida da API"); 
-              } 
-          } catch (error) { 
-              console.error("Erro ao adicionar usuário:", error); 
-              alert(error.response?.data?.error || "Erro ao adicionar o usuário. Verifique o nome de usuário e tente novamente."); 
-          } 
-      } 
-  }; 
- 
-    return ( 
-        <div className="app"> 
-            <h1>Favoritos do GitHub</h1> 
-            <input  
-                type="text"  
-                value={username}  
-                onChange={(e) => setUsername(e.target.value)}  
-                placeholder="GitHub username"  
-            /> 
-            <button onClick={handleAddUser}>Adicionar</button> 
-            <UserList /> 
-        </div> 
-    ); 
-} 
- 
+    const handleDeleteUser = async (username) => {
+        try {
+            await deleteUser(username);
+            setUsers(users.filter(user => user.username !== username));
+        } catch (error) {
+            console.error("Erro ao excluir o usuário:", error);
+        }
+    };
+
+    const handleToggleFavorite = async (username) => {
+        try {
+            await toggleStar(username); 
+            setUsers(users.map(user => 
+                user.username === username ? { ...user, favorite: !user.favorite } : user
+            ));
+        } catch (error) {
+            console.error("Erro ao favoritar o usuário:", error);
+        }
+    };
+
+    return (
+        <div className="app">
+          <h1>Favoritos do GitHub</h1>
+    
+          <div className="input-container">
+            <input
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              placeholder="GitHub username"
+            />
+            <button onClick={handleAddUser}>Adicionar</button>
+          </div>
+    
+          <UserList
+            users={users}
+            onDeleteUser={handleDeleteUser}
+            onFavoriteUser={handleToggleFavorite}
+          />
+        </div>
+      );
+}
+
 export default App;
