@@ -6,7 +6,7 @@ import './App.css';
 function App() {
     const [username, setUsername] = useState('');
     const [users, setUsers] = useState([]);
-    const [isSorted, setIsSorted] = useState(false); // Estado para controlar a ordenação
+    const [isSorted, setIsSorted] = useState(false);
 
     useEffect(() => {
         const fetchUsers = async () => {
@@ -54,7 +54,7 @@ function App() {
         }
     };
 
-    
+
     const sortUsersAlphabetically = () => {
         const sortedUsers = [...users].sort((a, b) => 
             a.username.localeCompare(b.username)
@@ -83,9 +83,10 @@ function App() {
 
     return (
         <div className="app">
-          <h1>Favoritos do GitHub</h1>
-
+          
           <div className="input-container">
+          <h1> PUMA - CODE CHALLENGE</h1>
+
             <input
               type="text"
               value={username}
@@ -100,8 +101,8 @@ function App() {
             <button onClick={handleAddUser}>Adicionar</button>
           </div>
 
-          <button onClick={toggleSort}>
-              {isSorted ? "Remover Ordenação" : "Ordenar A-Z"}
+          <button className="sort-button" onClick={toggleSort}>
+            {isSorted ? "Remover Ordenação" : "Ordenar A-Z"}
           </button>
 
           <UserList
