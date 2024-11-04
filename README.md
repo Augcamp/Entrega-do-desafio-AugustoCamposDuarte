@@ -15,3 +15,9 @@ Repositório voltado para partipação do processo seletivo proposto pelo PUMA
 + cd frontend
 + npm install
 + npm start
+
+
+### Testes
+
++ cd backend
++ npm test
