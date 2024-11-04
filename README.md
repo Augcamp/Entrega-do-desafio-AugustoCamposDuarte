@@ -4,6 +4,12 @@ Repositório voltado para partipação do processo seletivo proposto pelo PUMA
 
 # Intruções 
 
+### Dependências
+
++ Node.js
++ NPM
+
+
 ### Backend
 
 + cd backend
