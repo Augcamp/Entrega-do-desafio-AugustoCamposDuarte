@@ -9,7 +9,7 @@ const app = express();
 app.use(express.json());
 app.use('/userController', userController);
 
-describe('User Controller', () => {
+describe('Testes unitarios', () => {
     const user = {
         username: 'Augcamp',
         name: 'Augusto Duarte',
@@ -51,6 +51,32 @@ describe('User Controller', () => {
 
             expect(response.status).toBe(200);
             expect(response.body).toEqual(expect.arrayContaining([user]));
+        });
+    });
+
+    describe('Teste de deletar', () => {
+        it('deve remover um usuario dos favoritos', async () => {
+            await request(app).post('/userController').send({ username: 'Augcamp' });
+            const deleteResponse = await request(app).delete('/userController/Augcamp');
+
+            expect(deleteResponse.status).toBe(204);
+
+            const getResponse = await request(app).get('/userController');
+            expect(getResponse.body).toEqual([]);
+        });
+    });
+
+    describe('Teste da estrela', () => {
+        it('deve alternar a estrela de um usuario favorito', async () => {
+            await request(app).post('/userController').send({ username: 'Augcamp' });
+            const patchResponse = await request(app).patch('/userController/Augcamp/toggle-star');
+
+            expect(patchResponse.status).toBe(200);
+            expect(patchResponse.body.starred).toBe(true);
+
+            const secondPatchResponse = await request(app).patch('/userController/Augcamp/toggle-star');
+            expect(secondPatchResponse.status).toBe(200);
+            expect(secondPatchResponse.body.starred).toBe(false);
         });
     });
 
