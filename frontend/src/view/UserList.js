@@ -1,5 +1,5 @@
 import React from 'react';
-import './UserList.css';
+import '../components/UserList.css';
 import UserCard from './UserCard';
 
 function UserList({ users, onDeleteUser, onFavoriteUser }) {

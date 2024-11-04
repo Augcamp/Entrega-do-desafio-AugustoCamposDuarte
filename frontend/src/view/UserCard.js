@@ -1,5 +1,5 @@
 import React from 'react';
-import './UserCard.css';
+import '../components/UserCard.css';
 import githubIcon from '../assets/icons/github.svg';
 import trashIcon from '../assets/icons/trash.svg';
 import starIcon from '../assets/icons/star.svg';

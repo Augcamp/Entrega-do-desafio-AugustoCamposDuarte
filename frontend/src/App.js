@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { addUser, getUsers, deleteUser, toggleStar } from './api';
-import UserList from './components/UserList';
+import UserList from './view/UserList';
+import SearchBar from './view/SearchBar';
 import './App.css';
 
 function App() {
     const [username, setUsername] = useState('');
     const [users, setUsers] = useState([]);
-    const [isSorted, setIsSorted] = useState(false);
 
     useEffect(() => {
         const fetchUsers = async () => {
@@ -22,9 +22,16 @@ function App() {
 
     const handleAddUser = async () => {
         if (username) {
+            const normalizedUsername = username.toLowerCase();
+            
+            const userExists = users.some(user => user.username.toLowerCase() === normalizedUsername);
+            if (userExists) {
+                alert("Usuário já existe.");
+                setUsername('');
+                return;
+            }
             try {
                 const response = await addUser(username);
-                console.log("Usuário adicionado:", response.data);
                 setUsers([...users, response.data]);
                 setUsername('');
             } catch (error) {
@@ -54,64 +61,26 @@ function App() {
         }
     };
 
-
-    const sortUsersAlphabetically = () => {
-        const sortedUsers = [...users].sort((a, b) => 
-            a.username.localeCompare(b.username)
-        );
-        setUsers(sortedUsers);
-        setIsSorted(true);
-    };
-
-    const unsortUsers = async () => {
-        try {
-            const response = await getUsers();
-            setUsers(response.data);
-        } catch (error) {
-            console.error("Erro ao restaurar a lista original:", error);
-        }
-        setIsSorted(false);
-    };
-
-    const toggleSort = () => {
-        if (isSorted) {
-            unsortUsers();
-        } else {
-            sortUsersAlphabetically();
-        }
-    };
+    const hasUsers = users.length > 0;
 
     return (
         <div className="app">
-          
-          <div className="input-container">
-          <h1> PUMA - CODE CHALLENGE</h1>
-
-            <input
-              type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              placeholder="GitHub username"
-              onKeyPress={(e) => { 
-                if (e.key === 'Enter') {
-                  handleAddUser();
-                }
-            }}
+            <SearchBar 
+                username={username} 
+                onUsernameChange={setUsername} 
+                onAddUser={handleAddUser} 
+                users={users} 
+                setUsers={setUsers}
+                hasUsers={hasUsers}
             />
-            <button onClick={handleAddUser}>Adicionar</button>
-          </div>
 
-          <button className="sort-button" onClick={toggleSort}>
-            {isSorted ? "Remover Ordenação" : "Ordenar A-Z"}
-          </button>
-
-          <UserList
-            users={users}
-            onDeleteUser={handleDeleteUser}
-            onFavoriteUser={handleToggleFavorite}
-          />
+            <UserList
+                users={users}
+                onDeleteUser={handleDeleteUser}
+                onFavoriteUser={handleToggleFavorite}
+            />
         </div>
-      );
+    );
 }
 
 export default App;

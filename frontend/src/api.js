@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API = axios.create({ baseURL: 'http://localhost:3001/userController' });
+const API = axios.create({ baseURL: 'http://localhost:3001' });
 
 export const addUser = (username) => API.post('/', { username });
 export const getUsers = () => API.get('/');
